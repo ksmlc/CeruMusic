@@ -1,5 +1,7 @@
 <template>
   <Provider v-if="!$route.path.includes('desktop-lyric')">
+    <GlobalBackground />
+
     <router-view v-slot="{ Component }">
       <Transition
         :enter-active-class="`animate__animated animate__fadeIn  pagesApp`"
@@ -12,7 +14,3 @@
   <router-view v-else />
   <GlobalContextMenu />
 </template>
-
-<script setup lang="ts">
-import GlobalContextMenu from '@renderer/components/ContextMenu/GlobalContextMenu.vue'
-</script>

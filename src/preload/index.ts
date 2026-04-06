@@ -43,15 +43,44 @@ const api = {
   plugins: {
     selectAndAddPlugin: (type: 'lx' | 'cr') =>
       ipcRenderer.invoke('service-plugin-selectAndAddPlugin', type),
-    downloadAndAddPlugin: (url: string, type: 'lx' | 'cr') =>
-      ipcRenderer.invoke('service-plugin-downloadAndAddPlugin', url, type),
-    addPlugin: (pluginCode: string, pluginName: string) =>
-      ipcRenderer.invoke('service-plugin-addPlugin', pluginCode, pluginName),
+    downloadAndAddPlugin: (url: string, type: 'lx' | 'cr', targetPluginId?: string) =>
+      ipcRenderer.invoke('service-plugin-downloadAndAddPlugin', url, type, targetPluginId),
+    addPlugin: (pluginCode: string, pluginName: string, targetPluginId?: string) =>
+      ipcRenderer.invoke('service-plugin-addPlugin', pluginCode, pluginName, targetPluginId),
     getPluginById: (id: string) => ipcRenderer.invoke('service-plugin-getPluginById', id),
     loadAllPlugins: () => ipcRenderer.invoke('service-plugin-loadAllPlugins'),
     uninstallPlugin: (pluginId: string) =>
       ipcRenderer.invoke('service-plugin-uninstallPlugin', pluginId),
-    getPluginLog: (pluginId: string) => ipcRenderer.invoke('service-plugin-getPluginLog', pluginId)
+    getPluginLog: (pluginId: string) => ipcRenderer.invoke('service-plugin-getPluginLog', pluginId),
+    // 服务插件相关
+    getPluginType: (pluginId: string) =>
+      ipcRenderer.invoke('service-plugin-getPluginType', pluginId),
+    getConfigSchema: (pluginId: string) =>
+      ipcRenderer.invoke('service-plugin-getConfigSchema', pluginId),
+    getConfig: (pluginId: string) =>
+      ipcRenderer.invoke('service-plugin-getConfig', pluginId),
+    saveConfig: (pluginId: string, config: Record<string, any>) =>
+      ipcRenderer.invoke('service-plugin-saveConfig', pluginId, config),
+    testConnection: (pluginId: string) =>
+      ipcRenderer.invoke('service-plugin-testConnection', pluginId),
+    getPlaylists: (pluginId: string) =>
+      ipcRenderer.invoke('service-plugin-getPlaylists', pluginId),
+    getPlaylistSongs: (pluginId: string, playlistId: string) =>
+      ipcRenderer.invoke('service-plugin-getPlaylistSongs', pluginId, playlistId),
+    importToLocal: (pluginId: string, playlistId: string, playlistName?: string) =>
+      ipcRenderer.invoke('service-plugin-importToLocal', pluginId, playlistId, playlistName),
+    getServiceLyric: (pluginId: string, songInfo: any) =>
+      ipcRenderer.invoke('service-plugin-getServiceLyric', pluginId, songInfo),
+    onDeepLinkAdd: (
+      callback: (payload: { url: string; type: 'lx' | 'cr'; targetPluginId?: string }) => void
+    ) => {
+      const handler = (
+        _: any,
+        payload: { url: string; type: 'lx' | 'cr'; targetPluginId?: string }
+      ) => callback(payload)
+      ipcRenderer.on('plugin-add-link', handler)
+      return () => ipcRenderer.removeListener('plugin-add-link', handler)
+    }
   },
   // ai助手
   ai: {

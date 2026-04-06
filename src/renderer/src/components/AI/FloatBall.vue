@@ -417,7 +417,6 @@ onBeforeUnmount(() => {
   document.removeEventListener('mousemove', handleMouseMove)
   document.removeEventListener('mouseup', handleMouseUp)
   window.removeEventListener('resize', handleResize)
-  window.api.ai.removeStreamListeners()
   saveBallPosition() // 保存位置
 })
 </script>
@@ -482,7 +481,7 @@ onBeforeUnmount(() => {
               :class="message.type"
             >
               <div v-if="message.type === 'loading'" class="message-content loading-content">
-                <TLoading size="small" />
+                <t-loading size="small" />
                 <span class="loading-text">{{ message.content }}</span>
               </div>
               <div v-else class="message-content" v-html="message.html || message.content"></div>
